@@ -1,0 +1,203 @@
+LIGPLOT v.4.0  -  Parameter file (ligplot.prm)
+--------------------------------
+
+PRINT OPTIONS
+-------------
+Y     <- Produce a colour PostScript file (Y/N)?
+P     <- Orientation of plot: (P)ortrait or (L)andscape?
+0.0      <- Rotation angle (clockwise) for final plot
+
+PLOT PARAMETERS
+---------------
+Y     <- Include: Hydrophobic interactions - (Y/N)?
+N     <- Include: Water molecules - (Y/N)?
+Y     <- Include: Non-ligand mainchain atoms - (Y/N)?
+Y     <- Include: Linked residues listed below - (Y/N)?
+Y     <- Plot: Hydrogen bonds - (Y/N)?
+N     <- Plot: Internal H-bonds in ligand - (Y/N)?
+Y     <- Plot: External groups covalently bonded to ligand - (Y/N)?
+N     <- Plot: Bonds showing hydrophobic interactions - (Y/N)?
+N     <- Plot: Schematic ligand representation [see Note 1] - (Y/N)?
+N     <- Plot: Schematic non-ligand residues [see Note 1] - (Y/N)?
+N     <- Plot: Accessibility shading [see Note 2] - (Y/N)?
+Y     <- Plot: Ligand atoms (as spheres) - (Y/N)?
+Y     <- Plot: Nonligand atoms (as spheres) - (Y/N)?
+Y     <- Plot: Double- and triple bonds (for ligplot.pdb only) - (Y/N)?
+Y     <- Print: Key to symbols in PostScript output - (Y/N)?
+Y     <- Print: Residue names/numbers - (Y/N)?
+Y     <- Print: Atom names - (Y/N)?
+Y     <- Print: H-bond lengths on hydrogen bonds - (Y/N)?
+Y     <- Print: Filename as title if title not explicitly defined - (Y/N)?
+Y     <- Plot: Solid lines for covalent bonds to external groups - (Y/N)?
+0     <- Non-bonded contacts option [see Note 3]
+Y     <- Plot: Water atoms (as spheres) - (Y/N)?
+Y     <- Plot: Accessibility shading for the ligand only - (Y/N)?
+
+Note 1
+------
+In the "schematic ligand" representation, each peptide-like ligand residue
+is represented by a single circle. Only sidechains involved in hydrogen
+bonds or hydrophobic contacts with the protein are shown explicitly.
+
+The "schematic" representation for non-ligand residues means that each is
+represented by a single box with the residue name and number inside it.
+
+Note 2
+------
+If accessibility option is selected, the shading behind each ligand atom
+will be according to that atom's solvent accessibility. Solvent
+accessibilities can be calculated by running the NACCESS program. This
+generates a .asa file, and LIGPLOT should then be run on this .asa file in
+place of the original .pdb file. If LIGPLOT is run on an ordinary PDB file,
+the values in the B-value column will be taken to be accessibilities.
+
+Note that, when running NACCESS you should use the -f and -h flags.
+
+Note 3
+------
+The non-bonded contacts option determines which non-bonded contacts are to
+be included in the plot. The options are:-
+
+     0. Only contacts between hydrophobic atom types (ie carbon/sulphur
+        atoms in contact with other carbon/sulphur atoms). This is how
+	LIGPLOT defined hydrophobic contacts in versions prior to v.3.2.
+     1. A contact between a carbon/sulphur atom and any other atom.
+     2. A contact between any pair of atoms - excluding those that are
+        hydrogen-bonded.
+
+The distance defining an atom-atom contact is specified by the parameters
+to HBPLUS in ligplot.scr and can be changed there if necessary.
+
+
+LINKED RESIDUES (see Note below)
+---------------
+HIS-ASP  <- Residue-pair 1
+HOH-***  <- Residue-pair 2
+         <- Residue-pair 3
+         <- Residue-pair 4
+         <- Residue-pair 5
+         <- Residue-pair 6
+         <- Residue-pair 7
+         <- Residue-pair 8
+         <- Residue-pair 9
+         <- Residue-pair 10
+
+Note
+----
+The above options allow residues that are not directly hydrogen-bonded
+to the ligand to be included in the plot, provided they are
+hydrogen-bonded to a residue that IS hydrogen-bonded to the ligand.
+The residues to be included by their residue type and the non-ligand
+residue to which they are H-bonded. For example, `HIS-ASP' will include
+any Asp residues that are H-bonded to a His which is H-bonded to the
+ligand. More generally, `HIS-***' will show any residue H-bonded to the
+HIS. Similarly, `HOH-***' will include any residues in the protein
+that are connected to the ligand via a water molecule.
+
+
+SIZES (All sizes are relative sizes given in Angstroms)
+-----
+0.33  <- Radius: Ligand atoms
+0.33  <- Radius: Non-ligand atoms
+0.40  <- Radius: Water molecules
+1.15  <- Radius: Hydrophobic contact residues
+0.80  <- Radius: Ligand residues in simple-residue representation
+0.19  <- Line-thickness: Ligand bonds
+0.13  <- Line-thickness: Non-ligand bonds
+0.07  <- Line-thickness: Hydrogen bonds
+0.07  <- Line-thickness: External covalent bonds
+
+
+TEXT SIZES (Relative sizes in Angstroms)
+----------
+0.80  <- Residue names: Ligand residues
+0.63  <- Residue names: Non-ligand residues
+0.50  <- Residue names: Water molecule IDs
+0.50  <- Residue names: Hydrophobic-interaction residues
+0.50  <- Residue names: in simple-residue representation
+0.31  <- Atom names: Ligand atoms
+0.31  <- Atom names: Non-ligand atoms
+0.44  <- Hydrogen-bond lengths
+
+
+COLOURS (Note: colour definitions are given at end of file)
+-------
+CREAM          <- Background colour of page
+PURPLE         <- Ligand bonds [or ATOM - see Note]
+ORANGE         <- Non-ligand bonds [or ATOM - see Note]
+OLIVE GREEN    <- Hydrogen bonds
+PURPLE         <- External covalent bonds
+BRICK RED      <- Hydrophobic interactions
+ORANGE         <- Accessibility shading: Buried atoms
+YELLOW         <- Accessibility shading: Accessible atoms
+BLUE           <- Nitrogen atoms
+RED            <- Oxygen atoms
+BLACK          <- Carbon atoms
+YELLOW         <- Sulphur atoms
+TURQUOISE      <- Water atoms
+PURPLE         <- Phosphorus atoms
+PINK           <- Iron atoms
+LIME GREEN     <- All other atoms
+BLACK          <- Atom edges
+BLACK          <- Circles in simple-residue representation
+
+Note
+----
+If ATOM is entered as the colour of the bonds, the bonds will be coloured
+such that each half is of the colour of the atom bonded at that end.
+
+
+TEXT COLOURS (Note: colour definitions are given at end of file)
+------------
+BLACK          <- Plot title
+BLACK          <- Legends in key to symbols
+BLUE           <- Residue names: Ligand residues
+BRICK RED      <- Residue names: Non-ligand residues
+PURPLE         <- Residue names: Water molecule IDs
+BLACK          <- Residue names: Hydrophobic-interaction residues
+BLACK          <- Atom names: Ligand atoms
+BLACK          <- Atom names: Non-ligand atoms
+OLIVE GREEN    <- Hydrogen bond lengths
+
+
+COLOUR DEFINITIONS
+------------------
+0.0000 0.0000 0.0000 'BLACK          '<- Colour 1
+1.0000 1.0000 1.0000 'WHITE          '<- Colour 2
+1.0000 0.0000 0.0000 'RED            '<- Colour 3
+0.0000 1.0000 0.0000 'GREEN          '<- Colour 4
+0.0000 0.0000 1.0000 'BLUE           '<- Colour 5
+1.0000 1.0000 0.0000 'YELLOW         '<- Colour 6
+0.8000 0.5000 0.0000 'ORANGE         '<- Colour 7
+0.5000 1.0000 0.0000 'LIME GREEN     '<- Colour 8
+0.5000 0.0000 1.0000 'PURPLE         '<- Colour 9
+0.5000 1.0000 1.0000 'CYAN           '<- Colour 10
+1.0000 0.5000 1.0000 'PINK           '<- Colour 11
+0.3000 0.8000 1.0000 'SKY BLUE       '<- Colour 12
+1.0000 1.0000 0.7000 'CREAM          '<- Colour 13
+0.0000 1.0000 1.0000 'TURQUOISE      '<- Colour 14
+1.0000 0.0000 1.0000 'LILAC          '<- Colour 15
+0.8000 0.0000 0.0000 'BRICK RED      '<- Colour 16
+0.5000 0.0000 0.0000 'BROWN          '<- Colour 17
+0.9700 0.9700 0.9700 'LIGHT GREY     '<- Colour 18
+0.1000 0.5000 0.0000 'OLIVE GREEN    '<- Colour 19
+1.0000 1.0000 1.0000 'WHITE          '<- Colour 20
+
+
+MINIMIZATION PARAMETERS
+-----------------------
+ 10.00    <- Atom-atom clash parameter
+  0.20    <- Bond-atom clash parameter
+200.0     <- Bond-overlap score
+  0.5     <- Weight for term giving H-bond deviation from ideal value
+  0.01    <- Weight for term giving non-bond dist deviation from ideal value
+ 10.0     <- Weight for internal energies (atom clashes, etc)
+ 15.0     <- Furthest move-distance for H-bonded groups (in Angstroms)
+  1.0     <- "Stretch factor" for H-bond lengths
+1000      <- Number of loops for the minimization process
+0.0       <- Terminate minimization if energy drops by less than this value
+N         <- Random start for minimization routines - (Y/N)?
+20.0      <- Weight for anchor-position energy term
+5.0       <- Weight for interface-boundary energy term
+2.0       <- Closest atom-distance to boundary representing interface
+0.3       <- Weight for relative residue-positions energy term
