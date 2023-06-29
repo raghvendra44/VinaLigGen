@@ -7,7 +7,7 @@ from documentation import documentation
 from home import home
 
 #Important File paths
-parent_dir= "path\to\Master_folder"
+parent_dir= "path\to\Master_folder" + "\\"
 ligplot_processing_path = parent_dir+"\\top_40_files"
 
 def main():
