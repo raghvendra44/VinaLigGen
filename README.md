@@ -24,10 +24,10 @@ The above output depicts that the ghostscript is set up well.
 The main purpose to download this is to convert your .ps ligplot file into an .png which makes it easy to view and share.
 
 ### Step 3 : Adding Paths
-- Go to Line 15 of Master_folder/Automated_HB/home.py
+- Go to Line 10 of Master_folder/Automated_HB/main.py
 i.e ```parent_dir= "path\to\Master_folder"``` Change this path as per your system.
 
-- Go to Line 2 of Master_folder/Automated_HB/main.py
+- Go to Line 4 of Master_folder/Automated_HB/main.py
 i.e ```sys.path.append(r'path\to\Automated_HB')``` Change this path as per your system.
 
 ## Its RunTime!
