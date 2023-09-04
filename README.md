@@ -31,7 +31,7 @@ i.e ```parent_dir= "path\to\Master_folder"``` Change this path as per your syste
 i.e ```sys.path.append(r'path\to\Automated_HB')``` Change this path as per your system.
 
 ## Its RunTime!
-- Open command prompt where main2.py is situated and execute the following - ```streamlit run main.py```
+- Open command prompt and look for main.py is situated and execute the following - ```streamlit run main.py```
 
 ## Pilot
 - To test if the code is working, load files from the **testing** folder.
