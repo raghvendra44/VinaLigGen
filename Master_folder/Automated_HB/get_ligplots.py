@@ -7,7 +7,7 @@ def bat(parent_dir,ligplot_processing_path):
     print("\n Generating of ligplot Generator File!")
     #print(ligplot_processing_path+"/")
 
-    lines = f'''@ECHO OFF
+    lines = f"""@ECHO OFF
 SETLOCAL EnableDelayedExpansion
 
 SET count=0
@@ -30,11 +30,11 @@ FOR %%f IN (*.pdb) DO (
 	SET /A percent=count*50/total\n
 	SET "progressbar=|"\n
 	FOR /L %%i IN (1,1,!percent!) DO SET "progressbar=!progressbar!#"\n
-	ECHO Processing ligand %%~nf !progressbar! [^!count^!/^!total^!]\n
+	ECHO Processed ligand %%~nf !progressbar! [^!count^!/^!total^!]\n
 	)
 ECHO Program has ended\n
 timeout /t 1
-'''
+"""
 
     with open(f"{parent_dir}ligplot_generator.bat", "w") as f:
         f.write(lines)
@@ -65,6 +65,8 @@ timeout /t 1
             shutil.move(ligplot_processing_path + i,parent_dir + i)
         if(os.path.exists(ligplot_processing_path + "Molecule_detailed_files")!= True):
             os.mkdir(ligplot_processing_path + "Molecule_detailed_files")
+
+        print("Ziping all the data generated!")
         merge(parent_dir,ligplot_processing_path)
     else:
         return
