@@ -46,4 +46,4 @@ def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_p
     file.close()
 
     pdbqt = sum(f.endswith('.pdbqt') for f in os.listdir(ligplot_processing_path))
-    print("\t- SUCCESS: Fetched all the",pdbqt,"short listed files!!")
+    print("\t- SUCCESS: Fetched all the",pdbqt,"shortlisted files!!")
