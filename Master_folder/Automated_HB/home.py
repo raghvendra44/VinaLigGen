@@ -111,6 +111,7 @@ def home(parent_dir,ligplot_processing_path):
                 delete_all(parent_dir,parent_dir + "\\" + folder_with_ligands, parent_dir + "\\" + ref_file_for_splitting, "", parent_dir + "\\output.csv", ligplot_processing_path)
             st.success("Downloaded!!")
             st.balloons()
+            dwm=False
 
 def delete_all(parent_dir,ligand,macro,txt,csv,top):
     try:
