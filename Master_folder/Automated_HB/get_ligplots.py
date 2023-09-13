@@ -3,18 +3,11 @@ import shutil
 from get_bonds import write_csv
 from Making_zip import merge
 
-def bat(file,path):
-    c= [0,0]
-    # for i in os.listdir(path):
-    #     if(i[len(i)-3:] == "pdb"):
-    #         form = "pdb"
-    #     if(i[len(i)-5:] == "pdbqt"):
-    #         form = "pdbqt"
-    form = "pdb"
+def bat(parent_dir,ligplot_processing_path):
     print("\n Generating of ligplot Generator File!")
-    #print(path+"/")
+    #print(ligplot_processing_path+"/")
 
-    lines = f"""@ECHO OFF
+    lines = f'''@ECHO OFF
 SETLOCAL EnableDelayedExpansion
 
 SET count=0
@@ -25,14 +18,14 @@ FOR %%f IN (*.pdb) DO (
 )
 
 ECHO Program has started
-FOR %%f IN (*.{form}) DO (
+FOR %%f IN (*.pdb) DO (
     mkdir "%%~nf"
-    COPY "%%f" "{path}/%%~nf" > nul\n
+    COPY "%%f" "{ligplot_processing_path}%%~nf" > nul\n
     hbadd %%f components.cif -wkdir %%~nf > nul\n
-    hbplus -L -f %%~nf\hbplus.rc -h 2.90 -d 3.90 -N %%f -wkdir "{path}/%%~nf/" > nul\n
-    hbplus -L -f %%~nf\hbplus.rc -h 2.70 -d 3.35 %%f -wkdir "{path}/%%~nf/" > nul\n
-    ligplot %%f 1 1 N -wkdir "{path}/%%~nf/" > nul\n
-    gswin64c -dNOPAUSE -dBATCH -sDEVICE=pngalpha -sOutputFile={path}/%%~nf/ligplot.png -r800 {path}/%%~nf/ligplot.ps > nul\n
+    hbplus -L -f %%~nf\hbplus.rc -h 2.90 -d 3.90 -N %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+    hbplus -L -f %%~nf\hbplus.rc -h 2.70 -d 3.35 %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+    ligplot %%f 1 1 N -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+    gswin64c -dNOPAUSE -dBATCH -sDEVICE=pngalpha -sOutputFile={ligplot_processing_path}%%~nf/ligplot.png -r800 {ligplot_processing_path}%%~nf/ligplot.ps > nul\n
 	SET /A count+=1\n
 	SET /A percent=count*50/total\n
 	SET "progressbar=|"\n
@@ -41,9 +34,9 @@ FOR %%f IN (*.{form}) DO (
 	)
 ECHO Program has ended\n
 timeout /t 1
-"""
+'''
 
-    with open(f"{file}/ligplot_generator.bat", "w") as f:
+    with open(f"{parent_dir}ligplot_generator.bat", "w") as f:
         f.write(lines)
         f.close()
 
@@ -56,22 +49,22 @@ timeout /t 1
     check = 0
     for i in files:
         check = 0
-        if(i not in os.listdir(file)):
+        if(i not in os.listdir(parent_dir)):
             print("\t- ERR:",i,"Missing!")
             check = 0
         else:
             check = 1
     if(check == 1):
         for i in files:
-            shutil.move(file+"/"+i,path+"/"+i)
-        print("\n\t- All dependencies satisfied!\n\n\t- Please run the",path,"/ligplot_generator.bat file\n")
-        os.system(path + "\\ligplot_generator.bat")
+            shutil.move(parent_dir + i,ligplot_processing_path + i)
+        print("\n\t- All dependencies satisfied!\n\n")
+        os.system(ligplot_processing_path + "ligplot_generator.bat")
 
-        write_csv(file,path)
+        write_csv(parent_dir,ligplot_processing_path)
         for i in files:
-            shutil.move(path+"/"+i,file+"/"+i)
-        if(os.path.exists(path+"\\Molecule_detailed_files")!= True):
-            os.mkdir(path+"\\Molecule_detailed_files")
-        merge(file,path)
+            shutil.move(ligplot_processing_path + i,parent_dir + i)
+        if(os.path.exists(ligplot_processing_path + "Molecule_detailed_files")!= True):
+            os.mkdir(ligplot_processing_path + "Molecule_detailed_files")
+        merge(parent_dir,ligplot_processing_path)
     else:
         return
