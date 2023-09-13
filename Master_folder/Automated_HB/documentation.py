@@ -1,30 +1,32 @@
 import sys
-sys.path.append('D:\FFAR3\prashantha_sir_files\to_raghavendra\Master_folder\Automated_HB')
+from pathlib import Path
+path = Path(__file__).parent
+sys.path.append(path)
 
 import os
 import streamlit as st
 
-def documentation(parent_dir):
-    st.text("""Hydrogen and Hydrophobic bonds are key players in stabilizing energetically-favored
+def documentation():
+    st.text('''Hydrogen and Hydrophobic bonds are key players in stabilizing energetically-favored
 ligands. Hydrogen bond shows how well the ligand and molecule bind to each other.
 Higher the intermolecular hydrogen bonds, their effect on the formation of the
 complex will be stronger. Hydrophobic bond allows the protein to decrease in surface area and
 reduce the undesirable interactions with water.
-""")
+''')
     st.header("Steps to generate Hydrogen and Hydrophobic interactions")
     st.subheader("Step 1:")
-    st.text("""Compress all your Ligands into a .zip file and Upload (The size limit of the zip
-file is 200 MB)\nThere are 3 Types of ligand files this server can handle i.e""")
+    st.text('''Compress all your Ligands into a .zip file and Upload (The size limit of the zip
+file is 200 MB)\nThere are 3 Types of ligand files this server can handle i.e''')
 
     st.subheader("Type 1")
     st.text("\tThe Molecule ID is in the file name itself.")
     from PIL import Image
-    image = Image.open(parent_dir + '\documentation\\Type1.png')
+    image = Image.open(path + r'\documentation\Type1.png')
     st.image(image,"Ligand File Type 1")
 
     st.subheader("Type 2")
     st.text("\tThe Molecule ID is inside the file.")
-    image2 = Image.open(parent_dir + '\documentation\\Type2.png')
+    image2 = Image.open(path + r'\documentation\Type2.png')
     st.image(image2,"Ligand File Type 2")
 
     st.subheader("Type 3")
@@ -32,7 +34,7 @@ file is 200 MB)\nThere are 3 Types of ligand files this server can handle i.e"""
 file is inside a folder and the molecule ID is inside the file.
 As per this example, the molecule i.e 'out.pdbqt' is placed inside
 'KUS-LIB1_ligand_001' and the molecule ID is inside out.pdbqt""")
-    image3 = Image.open(parent_dir + '\documentation\\Type3.png')
+    image3 = Image.open(path + r'\documentation\Type3.png')
     st.image(image3,"Ligand File Type 3")
 
     st.subheader("Step 2")
