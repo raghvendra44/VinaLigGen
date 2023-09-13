@@ -3,22 +3,21 @@ import zipfile
 import shutil
 
 def create_zip(path,ziph):
-    #print("FILES ---",os.listdir(os.getcwd()))
-    folders = ["Target_files\\","ligplots\\","output.csv"]
-    for folder in folders:
-        if(folder!=folders[2]):
-            #print("FILES --")
-            for file in os.listdir(path + folder):
-                if(folder!= "ligplots\\"):
-                    ziph.write(path + folder + file)
-                else:
-                    print(file)
-                    for i in os.listdir(path + folder + file):
-                        print(i)
-                        ziph.write(path + folder + file + "\\" + i )
+    ziph.write(path + "output.csv")
 
-        else:
-            ziph.write(path + folder)
+    folders = ["Target_files\\","ligplots\\"]
+
+    for folder in folders:
+        for file in os.listdir(path + folder):
+
+            if("Target_files" in folder):
+                ziph.write(path + folder + file) # .pdbqt and .pdb files
+
+            else:
+                #print(file)
+                for i in os.listdir(path + folder + file):
+                    #print("\t -",i)
+                    ziph.write(path + folder + file + "\\" + i ) # .ps, .png, .hhb, .nnb etc.
 
 def merge(parent_dir,ligplot_processing_path):
     zip_file_name = "Molecule_detailed_files\\"
@@ -38,9 +37,9 @@ def merge(parent_dir,ligplot_processing_path):
             if(i != 'Molecule_detailed_files' and i != 'Molecule_detailed_files.zip'):
                 shutil.move(ligplot_processing_path + i, parent_dir + i)
 
-    shutil.copy(parent_dir + "output.csv", ligplot_processing_path +  zip_file_name + "output.csv")
+    shutil.move(parent_dir + "output.csv", ligplot_processing_path +  zip_file_name + "output.csv")
 
     zipf = zipfile.ZipFile(ligplot_processing_path + "Molecule_detailed_files.zip", 'w', zipfile.ZIP_DEFLATED)
     create_zip(zip_file_name,zipf)
-    print("\n\t- SUCCESS: Files zipped and ready to be downloaded!")
     zipf.close()
+    print("\n\t- SUCCESS: Files zipped and ready to be downloaded!")
