@@ -82,11 +82,12 @@ def split(ligplot_processing_path,complex_path):
     pdbqt = [f for f in os.listdir(ligplot_processing_path) if f.endswith('.pdbqt')]
     print("\t- Fetched",len(pdbqt),"files which are going to be split")
 
-    for file,pro in zip(pdbqt,tqdm(range(len(pdbqt)), desc="Spliting Files...")):
-        if file.endswith(".pdbqt"):
-            file_path = f"{ligplot_processing_path}/{file}"
-            name = os.path.splitext(file)[0]
-            read_file(file_path)
+    for pro in tqdm(range(1,len(pdbqt)+1), desc="Spliting Files...", total=len(pdbqt)):
+        if (pro != 0):
+            if(pdbqt[pro-1].endswith(".pdbqt")):
+                file_path = f"{ligplot_processing_path}/{pdbqt[pro-1]}"
+                name = os.path.splitext(pdbqt[pro-1])[0]
+                read_file(file_path)
 
     pdb = sum(f.endswith('.pdb') for f in os.listdir(ligplot_processing_path))
     print("\t- SUCCESS: All the",len(pdbqt),"files have been split to",pdb,"files!!")
