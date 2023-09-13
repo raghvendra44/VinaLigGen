@@ -2,10 +2,10 @@ import streamlit as st
 import time
 import os,sys
 import shutil
+
 #File Imports
 from zipfile import ZipFile
-from get_top_40 import get_files
-#from split_convert_preplig import split
+from shortlist_files import get_files
 from get_split_files import split
 from get_ligplots import bat
 from documentation import documentation
@@ -25,7 +25,7 @@ def home(parent_dir,ligplot_processing_path):
     global start_time
     ref_file_for_splitting = "macromolecule.pdb"
     reference_file = "shortlist.txt"
-    folder_with_ligands = "ligands"
+    folder_with_ligands = "ligands\\"
     st.subheader("Upload Required Files")
     upload_ligands = st.file_uploader("Upload Ligands",type = ["zip"],accept_multiple_files = False)
     upload_macromolecule = st.file_uploader("Upload Macro-Molecule",type = ["pdb"],accept_multiple_files = False)
@@ -44,24 +44,25 @@ def home(parent_dir,ligplot_processing_path):
 
     if(upload_button == True):
         if upload_ligands is not None:
-            if(os.path.exists(parent_dir +"\\"+ folder_with_ligands) != True):
-                os.mkdir(parent_dir +"\\"+ folder_with_ligands)
+            if(os.path.exists(parent_dir + folder_with_ligands) != True): # Checks if "ligands" folder exists
+                os.mkdir(parent_dir + folder_with_ligands) # If not then, Creates one.
 
-            with open(parent_dir +"\\"+ upload_ligands.name,"wb" ) as f:
+            with open(parent_dir + upload_ligands.name,"wb" ) as f: # Downloading the uploaded file
                 f.write(upload_ligands.getbuffer())
                 f.close()
-            with ZipFile(parent_dir + "\\" + upload_ligands.name,"r" ) as f:
-                f.extractall(parent_dir +"\\"+ folder_with_ligands)
+
+            with ZipFile(parent_dir + upload_ligands.name,"r" ) as f: # Unzipping and extracting data
+                f.extractall(parent_dir + folder_with_ligands)
                 f.close()
-                os.remove(parent_dir + "\\" + upload_ligands.name)
+                os.remove(parent_dir + upload_ligands.name)
 
         if upload_macromolecule is not None:
-            with open(parent_dir + "\\" + ref_file_for_splitting,"wb" ) as f:
+            with open(parent_dir + ref_file_for_splitting,"wb" ) as f: # Downloading the uploaded file
                 f.write(upload_macromolecule.getbuffer())
                 f.close()
 
         if upload_txt is not None:
-            with open(parent_dir + "\\" + reference_file,"wb" ) as f:
+            with open(parent_dir + reference_file,"wb" ) as f:
                 f.write(upload_txt.getbuffer())
                 f.close()
         else:
@@ -74,31 +75,32 @@ def home(parent_dir,ligplot_processing_path):
 
     if(run == True):
         start_time = time.time()
-        if(reference_file == None):
+        if(reference_file == None): # Checks if there are any particular files that are to be processed, if not it processes all the files available
     # -------- First get the Files Required -------------- #
-            if(os.path.exists(ligplot_processing_path) != True):
+            if(os.path.exists(ligplot_processing_path) != True): # Checks if "working_files" Folder exists, if not creates one
                 print("\t- Created a Folder for adding all the short listed files!")
                 os.mkdir(ligplot_processing_path)
-            for i in os.listdir(parent_dir+"\\ligands"):
-                shutil.copy(parent_dir+"\\ligands\\" + i, ligplot_processing_path + "\\" + i)
+
+            for i in os.listdir(parent_dir + folder_with_ligands):
+                shutil.move(parent_dir + folder_with_ligands + i, ligplot_processing_path + i) # Moves all the files that are to be processed to "working_files" Folder
 
         else:
-            get_files(reference_file,folder_with_ligands,parent_dir,ligplot_processing_path,n)
+            get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_path,n) # If there are particular files to be processed, get_files function does so.
 
     # -------- Spliting each file into its individual conformation ------------ #
-        split(ligplot_processing_path+"/",os.path.join(parent_dir,ref_file_for_splitting))
+        split(ligplot_processing_path,os.path.join(parent_dir,ref_file_for_splitting))
 
     # -------- Generating Ligplots for each file ------------- #
         bat(parent_dir,ligplot_processing_path)
 
-    if(os.path.exists(ligplot_processing_path + "\\Molecule_detailed_files.zip")):
+    if(os.path.exists(ligplot_processing_path + "Molecule_detailed_files.zip")):
         end_time = time.time()
         lapsed = end_time-start_time
         mins = lapsed // 60
         sec = lapsed % 60
         hours = mins // 60
         mins = mins % 60
-        with open(ligplot_processing_path + "\\Molecule_detailed_files.zip", "rb") as fp:
+        with open(ligplot_processing_path + "Molecule_detailed_files.zip", "rb") as fp:
             dwm = st.download_button("Download Files",fp,"Molecule_detailed_files.zip",mime="application/zip")
             fp.close()
         st.info("Time Taken for the Job to Finish = "+ duration(hours,mins,sec))
@@ -106,9 +108,9 @@ def home(parent_dir,ligplot_processing_path):
         if(dwm == True):
             os.chdir(parent_dir)
             if(reference_file!=None):
-                delete_all(parent_dir, parent_dir + "\\" + folder_with_ligands, parent_dir + "\\" + ref_file_for_splitting, parent_dir + "\\" + reference_file, parent_dir + "\\output.csv", ligplot_processing_path)
+                delete_all(parent_dir, parent_dir + folder_with_ligands, parent_dir + ref_file_for_splitting, parent_dir + reference_file, parent_dir + "output.csv", ligplot_processing_path)
             else:
-                delete_all(parent_dir,parent_dir + "\\" + folder_with_ligands, parent_dir + "\\" + ref_file_for_splitting, "", parent_dir + "\\output.csv", ligplot_processing_path)
+                delete_all(parent_dir,parent_dir + folder_with_ligands, parent_dir + ref_file_for_splitting, "", parent_dir + "output.csv", ligplot_processing_path)
             st.success("Downloaded!!")
             st.balloons()
             dwm=False
