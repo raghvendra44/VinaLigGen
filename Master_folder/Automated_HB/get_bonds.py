@@ -82,20 +82,22 @@ def write_csv(parent_dir,ligplot_processing_path):
             temp.append(x);temp.append(y)
         csv_data.append(temp)
 
-    print("\n\t- All Details Fetched!")
+    print("\t- All Details Fetched!\n")
     with open(parent_dir + "output.csv", "w", encoding='utf-8') as f:
-        for i,pro in zip(csv_data,tqdm (range (len(csv_data)), desc="Creating csv...")):
+        for pro in tqdm (range (1,len(csv_data)+1), desc="Creating csv...",total=len(csv_data)):
             temp = ""
-            if(i != []):
-                for j in i:
-                    if(i.index(j) == 0):
-                        temp = j
-                    else:
-                        if(j == []):
-                            j = ""
-                        elif(type(j) == list and j != []):
-                            j = " | ".join(j)
-                        temp = temp + ","+ j
-                temp = temp + "\n"
-                f.write(temp)
-        print("\n\t- SUCCESS: output.csv file has been created with all the bond data!")
+            if(pro != 0):
+                if(csv_data[pro-1] != []):
+                    for j in csv_data[pro-1]:
+                        if(csv_data[pro-1].index(j) == 0):
+                            temp = j
+                        else:
+                            if(j == []):
+                                j = ""
+                            elif(type(j) == list and j != []):
+                                j = " | ".join(j)
+                            temp = temp + ","+ j
+                    temp = temp + "\n"
+                    f.write(temp)
+        f.close()
+        print("\t- SUCCESS: output.csv file has been created with all the bond data!\n")
