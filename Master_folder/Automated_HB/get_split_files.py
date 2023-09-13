@@ -1,93 +1,49 @@
 import os
-from tqdm import tqdm
+import shutil
 
-#This function is used to split a single pdbqt file into multiple pdb files
-def split(path,complex_path):
-    print("\n\nStarting Splitting of Files\n")
-    os.chdir(path)
-    adict = {} #Dictionary to store ligand atoms
-    #This function is used to read the pdbqt file and split it into multiple pdb files
-    def read_file(file_path):
+def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_path,n):
 
-            with open(file_path, 'r') as fo:
-                mode = 1
+    print("\n Getting short listed files - using File name...\n")
 
-                for x in fo.read().split("\n"):
-                    if (x.startswith("MODEL")): #Check if line starts with MODEL
-                        name_mode = f"{name}_{mode}" #Create a new pdb file name for each mode
+    if(os.path.exists(ligplot_processing_path) != True):
+        print("\t- Created a Folder for adding all the short listed files!")
+        os.mkdir(ligplot_processing_path)
 
-                    elif (x.startswith("HETATM")): #Check if line starts with HETATM
-                        with open(path + name_mode + '.pdb', 'a') as opf:
-                            x = preparelig(x) #Call preparelig() function to prepare the ligand atoms
-                            opf.write(x + '\n') #Write the output to a new pdb file
-                            opf.close()
+    with open(parent_dir + reference_file, "r", encoding='utf-8') as file:
+        data = file.readlines()
+        print("\t- Fetching short listed files...!")
 
-                    elif (x.startswith("ENDMDL")):
-                        mode += 1
-                        adict.clear()
+        for i in data:
+            try:
+                k = i.split("_")[1]     # ZINC ID
+            except IndexError:
+                k = i[:len(i)-1]
 
-                        with open(complex_path, 'r') as fo2:
-                            for y in fo2.read().split("\n"):
+            not_found = False
+            for j in os.listdir(parent_dir + folder_with_ligands):
+                if(n == 1):
+                    if(k in j):
+                        if("\n" in i):
+                            i = i[:-1]
+                        shutil.move(parent_dir + folder_with_ligands + j,ligplot_processing_path + i +".pdbqt")     # isolates the required file to another folder
 
-                                if (y.startswith("ENDMDL")):
-                                    with open(path + name_mode + '.pdb', 'a') as opf2:
-                                        opf2.write(y)
-                                        opf2.close()
-                                        fo2.close()
+                else:
+                    if(n == 2):
+                        ending = j
+                    elif(n == 3):
+                        ending = {j} + "\\out.pdbqt"
 
-                                elif (y.startswith("ATOM")):
-                                    with open(path + name_mode + '.pdb', 'a') as opf3:
+                    with open(parent_dir + folder_with_ligands + ending, "r", encoding='utf-8') as file2:
+                        id = file2.read()
+                        if(i in id):
+                            if("\n" in i):
+                                i = i[:-1]
+                            shutil.move(parent_dir+ folder_with_ligands + ending,ligplot_processing_path + i + ".pdbqt")     # isolates the required file to another folder
+                not_found = True
 
-                                        opf3.write(y + '\n')
-                                        opf3.close()
+            if(not_found == False):
+                print(i," NOT FOUND!!")
+    file.close()
 
-                        #print(name_mode + " completed")
-            fo.close
-
-    #This function is used to prepare the ligand atoms in the pdbqt file
-    def preparelig(x):
-            line = splitchar(x)
-            atom = line[13]
-
-            if atom in adict:
-                    adict[atom] += 1
-            else:
-                    adict[atom] = 1
-
-            numstr = str(adict[atom])
-            number = splitchar(numstr)
-
-            b = 14
-            c = 0
-            for x in number:
-                    line[b] = number[c]
-                    b += 1
-                    c += 1
-
-            n = 66
-            for x in line[n:82]:
-                    line[n]=" "
-                    n += 1
-
-            line[77] = line[13]
-            line = "".join(line)
-            return line
-
-    #This function is used to split characters from a string
-    def splitchar(word):
-        return [char for char in word]
-
-
-    pdbqt = sum(f.endswith('.pdbqt') for f in os.listdir(path))
-    print("\t- Fetched",pdbqt,"files which are going to be split")
-
-    for file,pro in zip(os.listdir(path),tqdm(range(pdbqt), desc="Spliting Files...")):
-        if file.endswith(".pdbqt"):
-            file_path = f"{path}/{file}"
-            name = os.path.splitext(file)[0]
-            read_file(file_path)
-
-
-
-    pdb = sum(f.endswith('.pdb') for f in os.listdir(path))
-    print("\t- SUCCESS: All the",pdbqt,"files have been split to",pdb,"files!!")
+    pdbqt = sum(f.endswith('.pdbqt') for f in os.listdir(ligplot_processing_path))
+    print("\t- SUCCESS: Fetched all the",pdbqt,"short listed files!!")
