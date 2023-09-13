@@ -2,10 +2,10 @@ import os
 from tqdm import tqdm
 
 
-def get_hydrogen_bonds(file_path):
-    # file_path = path/ligplot.hbb and root = path to the folder of molecule generated after ligplot generation
+def get_hydrogen_bonds(hhb):
+    # hhb = path/ligplot.hbb and root = path to the folder of molecule generated after ligplot generation
 
-    with open(file_path, 'r') as fo:
+    with open(hhb, 'r') as fo:
             residue = []
             bondl = []
 
@@ -37,8 +37,8 @@ def get_hydrogen_bonds(file_path):
             #print(residue,bondl)
             return residue,bondl
 
-def get_hydrophobic_bonds(file_path):
-    with open(file_path, 'r') as fo:
+def get_hydrophobic_bonds(nnb):
+    with open(nnb, 'r') as fo:
             residue = []
             bondl = []
             for x in fo.readlines()[3:]:
@@ -68,22 +68,22 @@ def get_hydrophobic_bonds(file_path):
             return residue,bondl
 
 
-def write_csv(path,folders):
+def write_csv(parent_dir,ligplot_processing_path):
     print("\n\nGenerating CSV with All bond Details!")
     csv_data = [["LIGAND_NAME","Hydrogen_bonds","Hydrogen_bond_distance","Hydrophobic_bonds","Hydrophobic_bond_distance"]]
-    for i,pro in zip(os.listdir(folders),tqdm (range (len(os.listdir(folders))-1), desc="Fetching Bond data...")):
+    for i,pro in zip(os.listdir(ligplot_processing_path),tqdm (range (len(os.listdir(ligplot_processing_path))-1), desc="Fetching Bond data...")):
         temp = []
-        if (os.path.isdir(folders+"\\"+i) and os.path.isfile(folders+"\\"+i+"\ligplot.hhb") and os.path.isfile(folders+"\\"+i+"\ligplot.nnb")
+        if (os.path.isdir(ligplot_processing_path + i) and os.path.isfile(ligplot_processing_path + i +"\ligplot.hhb") and os.path.isfile(ligplot_processing_path + i +"\ligplot.nnb")
         and i!= "Molecule_detailed_files" and ".pdbqt" not in i):
             temp.append(i)
-            x,y = get_hydrogen_bonds(folders+"\\"+i+"\ligplot.hhb")
-            temp.append(x);temp.append(y);
-            x,y = get_hydrophobic_bonds(folders+"\\"+i+"\ligplot.nnb")
-            temp.append(x);temp.append(y);
+            x,y = get_hydrogen_bonds(ligplot_processing_path + i + "\ligplot.hhb")
+            temp.append(x);temp.append(y)
+            x,y = get_hydrophobic_bonds(ligplot_processing_path + i + "\ligplot.nnb")
+            temp.append(x);temp.append(y)
         csv_data.append(temp)
 
     print("\n\t- All Details Fetched!")
-    with open(path+"\\output.csv", "w", encoding='utf-8') as f:
+    with open(parent_dir + "output.csv", "w", encoding='utf-8') as f:
         for i,pro in zip(csv_data,tqdm (range (len(csv_data)), desc="Creating csv...")):
             temp = ""
             if(i != []):
@@ -99,6 +99,3 @@ def write_csv(path,folders):
                 temp = temp + "\n"
                 f.write(temp)
         print("\n\t- SUCCESS: output.csv file has been created with all the bond data!")
-#write_csv("D:\FFAR3\prashantha_sir_files\\to_raghavendra\Master_folder","D:\FFAR3\prashantha_sir_files\\to_raghavendra\Master_folder\\top_40_files")
-#get_hydrogen_bonds("D:\FFAR3\prashantha_sir_files\\to_raghavendra\\top_40_files\mannose_zinc000005053045_uff_e=594941.46_2/ligplot.hhb")
-#get_hydrophobic_bonds("D:/FFAR3/prashantha_sir_files/to_raghavendra/top_40_files/mannose_zinc000076932198_uff_e=594941.46_1/ligplot.nnb")
