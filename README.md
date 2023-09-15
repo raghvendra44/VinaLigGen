@@ -1,7 +1,7 @@
 # VinaLigGen
 Generate Bulk Ligplots by using docked complexes from Autodock vina
 
-## Process to satisfy all dependencies
+## Steps to satisfy all dependencies
 
 ### Step 0 : Pre-requisites
 - Python version below 3.11 and above 3.8. Optimum python version would be [3:10:7](https://www.python.org/downloads/release/python-3107/)
@@ -22,13 +22,6 @@ GS>
 ```
 The above output depicts that the ghostscript is set up well.
 The main purpose to download this is to convert your .ps ligplot file into an .png which makes it easy to view and share.
-
-### Step 3 : Adding Paths
-- Go to Line 10 of Master_folder/Automated_HB/main.py
-i.e ```parent_dir= "path\to\Master_folder"``` Change this path as per your system.
-
-- Go to Line 4 of Master_folder/Automated_HB/main.py
-i.e ```sys.path.append(r'path\to\Automated_HB')``` Change this path as per your system.
 
 ## Its RunTime!
 - Open command prompt and look for main.py and execute the following - ```streamlit run main.py```
