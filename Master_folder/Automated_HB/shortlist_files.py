@@ -22,10 +22,12 @@ def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_p
             not_found = False
             for j in os.listdir(parent_dir + folder_with_ligands):
                 if(n == 1):
-                    if(k in j):
+                    if(k.lower() in j.lower()):
+
                         if("\n" in i):
                             i = i[:-1]
-                        shutil.move(parent_dir + folder_with_ligands + j,ligplot_processing_path + i +".pdbqt")     # isolates the required file to another folder
+
+                        shutil.move(parent_dir + folder_with_ligands + j, ligplot_processing_path + i +".pdbqt")     # isolates the required file to another folder
 
                 else:
                     if(n == 2):
@@ -35,7 +37,7 @@ def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_p
 
                     with open(parent_dir + folder_with_ligands + ending, "r", encoding='utf-8') as file2:
                         id = file2.read()
-                        if(i in id):
+                        if(i.lower() in id.lower()):
                             if("\n" in i):
                                 i = i[:-1]
                             shutil.move(parent_dir+ folder_with_ligands + ending,ligplot_processing_path + i + ".pdbqt")     # isolates the required file to another folder
