@@ -75,18 +75,9 @@ def home(parent_dir,ligplot_processing_path):
 
     if(run == True):
         start_time = time.time()
-        if(reference_file == None): # Checks if there are any particular files that are to be processed, if not it processes all the files available
-    # -------- First get the Files Required -------------- #
-            if(os.path.exists(ligplot_processing_path) != True): # Checks if "working_files" Folder exists, if not creates one
-                print("\t- Created a Folder for adding all the short listed files!")
-                os.mkdir(ligplot_processing_path)
-
-            for i in os.listdir(parent_dir + folder_with_ligands):
-                shutil.move(parent_dir + folder_with_ligands + i, ligplot_processing_path + i) # Moves all the files that are to be processed to "working_files" Folder
-
-        else:
-            get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_path,n) # If there are particular files to be processed, get_files function does so.
-
+        
+        get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_path,n) # If there are particular files to be processed, get_files function does so.
+        
     # -------- Spliting each file into its individual conformation ------------ #
         split(ligplot_processing_path,os.path.join(parent_dir,ref_file_for_splitting))
 
