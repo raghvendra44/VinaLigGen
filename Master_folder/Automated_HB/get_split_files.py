@@ -8,41 +8,42 @@ def split(ligplot_processing_path,complex_path):
     adict = {} #Dictionary to store ligand atoms
     #This function is used to read the pdbqt file and split it into multiple pdb files
     def read_file(file_path):
-
+            mode=0
+            name_mode = f"{name}_{mode}"
             with open(file_path, 'r') as fo:
-                mode = 1
+                if not (os.path.exists(ligplot_processing_path + name_mode + '.pdb')):
+                    for x in fo.read().split("\n"):
+                        if (x.startswith("MODEL")): #Check if line starts with MODEL
+                            mode = x.split()[1]
+                            name_mode = f"{name}_{mode}" #Create a new pdb file name for each mode
+                            #print("Processing :",ligplot_processing_path + name_mode + '.pdb')
+                        elif (x.startswith("HETATM")): #Check if line starts with HETATM
+                            with open(ligplot_processing_path + name_mode + '.pdb', 'a') as opf:
+                                x = preparelig(x) #Call preparelig() function to prepare the ligand atoms
+                                opf.write(x + '\n') #Write the output to a new pdb file
+                                opf.close()
 
-                for x in fo.read().split("\n"):
-                    if (x.startswith("MODEL")): #Check if line starts with MODEL
-                        name_mode = f"{name}_{mode}" #Create a new pdb file name for each mode
+                        elif (x.startswith("ENDMDL")):
+                            #mode += 1
+                            adict.clear()
 
-                    elif (x.startswith("HETATM")): #Check if line starts with HETATM
-                        with open(ligplot_processing_path + f"{name}_{mode}" + '.pdb', 'a') as opf:
-                            x = preparelig(x) #Call preparelig() function to prepare the ligand atoms
-                            opf.write(x + '\n') #Write the output to a new pdb file
-                            opf.close()
+                            with open(complex_path, 'r') as fo2:
+                                for y in fo2.read().split("\n"):
 
-                    elif (x.startswith("ENDMDL")):
-                        mode += 1
-                        adict.clear()
+                                    if (y.startswith("ENDMDL")):
+                                        with open(ligplot_processing_path + name_mode + '.pdb', 'a') as opf2:
+                                            opf2.write(y)
+                                            opf2.close()
+                                            fo2.close()
 
-                        with open(complex_path, 'r') as fo2:
-                            for y in fo2.read().split("\n"):
+                                    elif (y.startswith("ATOM")):
+                                        with open(ligplot_processing_path + name_mode + '.pdb', 'a') as opf3:
 
-                                if (y.startswith("ENDMDL")):
-                                    with open(ligplot_processing_path + f"{name}_{mode}" + '.pdb', 'a') as opf2:
-                                        opf2.write(y)
-                                        opf2.close()
-                                        fo2.close()
-
-                                elif (y.startswith("ATOM")):
-                                    with open(ligplot_processing_path + f"{name}_{mode}" + '.pdb', 'a') as opf3:
-
-                                        opf3.write(y + '\n')
-                                        opf3.close()
+                                            opf3.write(y + '\n')
+                                            opf3.close()
 
                         #print(name_mode + " completed")
-            fo.close
+                fo.close()
 
     #This function is used to prepare the ligand atoms in the pdbqt file
     def preparelig(x):
