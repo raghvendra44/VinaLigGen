@@ -17,7 +17,7 @@ def split(ligplot_processing_path,complex_path):
                         name_mode = f"{name}_{mode}" #Create a new pdb file name for each mode
 
                     elif (x.startswith("HETATM")): #Check if line starts with HETATM
-                        with open(ligplot_processing_path + name_mode + '.pdb', 'a') as opf:
+                        with open(ligplot_processing_path + f"{name}_{mode}" + '.pdb', 'a') as opf:
                             x = preparelig(x) #Call preparelig() function to prepare the ligand atoms
                             opf.write(x + '\n') #Write the output to a new pdb file
                             opf.close()
@@ -30,13 +30,13 @@ def split(ligplot_processing_path,complex_path):
                             for y in fo2.read().split("\n"):
 
                                 if (y.startswith("ENDMDL")):
-                                    with open(ligplot_processing_path + name_mode + '.pdb', 'a') as opf2:
+                                    with open(ligplot_processing_path + f"{name}_{mode}" + '.pdb', 'a') as opf2:
                                         opf2.write(y)
                                         opf2.close()
                                         fo2.close()
 
                                 elif (y.startswith("ATOM")):
-                                    with open(ligplot_processing_path + name_mode + '.pdb', 'a') as opf3:
+                                    with open(ligplot_processing_path + f"{name}_{mode}" + '.pdb', 'a') as opf3:
 
                                         opf3.write(y + '\n')
                                         opf3.close()
