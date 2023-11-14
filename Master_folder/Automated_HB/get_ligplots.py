@@ -4,6 +4,7 @@ from get_bonds import write_csv
 from Making_zip import merge
 import glob
 import sys
+import traceback
 
 def check_folders(ligplot_processing_path):
     for i in glob.glob(ligplot_processing_path+"*.pdbqt"):
@@ -27,10 +28,28 @@ def get_ligand_details(pdb_file):
                         if(data[line[3]][0] == line[4]):
                             data[line[3]][1].append(line[5])
         pdb.close()
+
+    with open(pdb_file, 'r') as pdb:
+        if (list(data.keys())==[]):
+            for line in pdb:
+                if line.startswith("HETATM"):
+                    line = line.split()
+                    if(line[3] != "HOH"):
+                        if(line[3] not in list(data.keys())):
+                            data["-n"+line[3]] = [line[4],[line[5]]]
+                        else:
+                            if(data[line[3]][0] == line[4]):
+                                data["-n"+line[3]][1].append(line[5])
+        if (list(data.keys())==[]):
+            return "Either the pdb doesn't have a ligand or change the ligand name to 3 characters (eg: ABC)!"
+        pdb.close()
         val = []
         for i in data.keys():
-            val.append([i,data[i][0],min(data[i][1]),max(data[i][1])]) # [ligand,chain id, min residue number, max residue number]
-        #print(val)
+            val.append(i)
+            val.append(data[i][0])
+            val.append(min(data[i][1]))
+            val.append(max(data[i][1])) # [ligand,chain id, min residue number, max residue number]
+        print(val)
         return val
 
 def bat(parent_dir,ligplot_processing_path):
@@ -40,9 +59,19 @@ def bat(parent_dir,ligplot_processing_path):
     for i in glob.glob(ligplot_processing_path+"*.pdb"):
         lig_det = get_ligand_details(i)
         break
-    print("\t Extracted Ligand Detials -\n\t - Ligand Name:",lig_det[0][0],"\n\t - Chain ID:",lig_det[0][1],"\n\t - Min & Max Residue Numbers :",lig_det[0][2],"-",lig_det[0][3])
+    try:
+        print("\tExtracted Ligand Detials -\n\t- Ligand Name:",lig_det[0],"\n\t- Chain ID:",lig_det[1],"\n\t- Min & Max Residue Numbers :",lig_det[2],"-",lig_det[3],"\n\n")
+    except Exception as e:
+        print(lig_det)
+        print("Error occured:",e)
+        traceback.print_exc()
+
     lines = f"""@ECHO OFF
 SETLOCAL EnableDelayedExpansion
+
+REM :Ctrl-C
+REM echo BAT: Script was interrupted by the user.
+REM goto :EOF
 
 SET count=0
 SET total=0
@@ -58,7 +87,7 @@ FOR %%f IN (*.pdb) DO (
     hbadd %%f components.cif -wkdir %%~nf > nul\n
     hbplus -L -f %%~nf\hbplus.rc -N %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
     hbplus -L -f %%~nf\hbplus.rc %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
-    ligplot %%f {lig_det[0][0]} {lig_det[0][2]} {lig_det[0][0]} {lig_det[0][3]} {lig_det[0][1]} -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+    ligplot %%f {lig_det[0]} {lig_det[2]} {lig_det[0]} {lig_det[3]} {lig_det[1]} -wkdir "{ligplot_processing_path}%%~nf/"\n
 	SET /A count+=1\n
 	SET /A percent=count*50/total\n
 	SET "progressbar=|"\n
