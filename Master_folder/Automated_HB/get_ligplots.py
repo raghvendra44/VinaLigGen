@@ -15,6 +15,9 @@ def check_folders(ligplot_processing_path):
                 return False
     return True
 
+# https://www.ebi.ac.uk/thornton-srv/software/HBPLUS/manual.html
+# http://www.csb.yale.edu/userguides/graphics/ligplot/manual/man2.html
+
 def get_ligand_details(pdb_file):
     data = {}
     with open(pdb_file, 'r') as pdb:
@@ -49,7 +52,7 @@ def get_ligand_details(pdb_file):
             val.append(data[i][0])
             val.append(min(data[i][1]))
             val.append(max(data[i][1])) # [ligand,chain id, min residue number, max residue number]
-        print(val)
+        #print(val)
         return val
 
 def bat(parent_dir,ligplot_processing_path):
@@ -85,9 +88,9 @@ FOR %%f IN (*.pdb) DO (
     mkdir "%%~nf"
     COPY "%%f" "{ligplot_processing_path}%%~nf" > nul\n
     hbadd %%f components.cif -wkdir %%~nf > nul\n
-    hbplus -L -f %%~nf\hbplus.rc -N %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
-    hbplus -L -f %%~nf\hbplus.rc %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
-    ligplot %%f {lig_det[0]} {lig_det[2]} {lig_det[0]} {lig_det[3]} {lig_det[1]} -wkdir "{ligplot_processing_path}%%~nf/"\n
+    hbplus -L -f %%~nf\hbplus.rc -h 2.90 -d 3.90 -N %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+    hbplus -L -f %%~nf\hbplus.rc -h 2.70 -d 3.35 %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+    ligplot %%f 1 1 N -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
 	SET /A count+=1\n
 	SET /A percent=count*50/total\n
 	SET "progressbar=|"\n
@@ -96,11 +99,19 @@ FOR %%f IN (*.pdb) DO (
     gswin64c -dNOPAUSE -dBATCH -sDEVICE=pngalpha -sOutputFile={ligplot_processing_path}%%~nf/ligplot.png -r800 {ligplot_processing_path}%%~nf/ligplot.ps > nul\n
 	ECHO Processed ligand %%~nf !progressbar! [^!count^!/^!total^!]\n
 		) else (
-		REM echo %%~nf/ligplot.ps was not generated!
-        ECHO Processed ligand %%~nf but no ligplot !progressbar! [^!count^!/^!total^!]\n
-		)
+        hbplus -L -f %%~nf\hbplus.rc -N %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+        hbplus -L -f %%~nf\hbplus.rc %%f -wkdir "{ligplot_processing_path}%%~nf/" > nul\n
+        ligplot %%f {lig_det[0]} {lig_det[2]} {lig_det[0]} {lig_det[3]} {lig_det[1]} -wkdir "{ligplot_processing_path}%%~nf/ > nul"\n
 
+        if exist "%{ligplot_processing_path}%%~nf/ligplot.ps%" (
+            gswin64c -dNOPAUSE -dBATCH -sDEVICE=pngalpha -sOutputFile={ligplot_processing_path}%%~nf/ligplot.png -r800 {ligplot_processing_path}%%~nf/ligplot.ps > nul\n
+            ECHO Processed ligand %%~nf !progressbar! [^!count^!/^!total^!]\n
+		) else (
+            ECHO Processed ligand %%~nf but no ligplot !progressbar! [^!count^!/^!total^!]\n
+        )
 	)
+
+)
 ECHO Ligplots Extracted!!\n
 """
 
@@ -124,7 +135,7 @@ ECHO Ligplots Extracted!!\n
             check = 1
     if(check == 1):
         for i in files:
-            shutil.move(parent_dir + i,ligplot_processing_path + i)
+            shutil.copy(parent_dir + i,ligplot_processing_path + i)
         print("\n\t- All dependencies satisfied!\n\n")
         os.system(ligplot_processing_path + "ligplot_generator.bat")
         print("\n\nRunning a Safety Check before extracting data!!")
