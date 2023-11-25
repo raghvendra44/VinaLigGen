@@ -29,7 +29,7 @@ def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_p
                 not_found = True
                 ending = ''
                 for ligand in files_in_ligands_folder:
-                    if( n == 1 and (file_id in ligand or file_id[:-1] in ligand)):
+                    if( n == 1 and ([file_id] in [ligand] or file_id[:-1] in [ligand])):
                         move_file(ligand, i, parent_dir + folder_with_ligands, ligplot_processing_path)
                         files_in_ligands_folder.remove(ligand)
                         not_found = False
