@@ -63,7 +63,10 @@ def bat(parent_dir,ligplot_processing_path):
         lig_det = get_ligand_details(i)
         break
     try:
-        print("\tExtracted Ligand Detials -\n\t- Ligand Name:",lig_det[0],"\n\t- Chain ID:",lig_det[1],"\n\t- Min & Max Residue Numbers :",lig_det[2],"-",lig_det[3],"\n\n")
+        if(len(lig_det)>0 or type(lig_det)!=list):
+            print("\tExtracted Ligand Detials -\n\t- Ligand Name:",lig_det[0],"\n\t- Chain ID:",lig_det[1],"\n\t- Min & Max Residue Numbers :",lig_det[2],"-",lig_det[3],"\n\n")
+	else:
+            print("Warning : No ligand details found in the file! -",lig_det)
     except Exception as e:
         print(lig_det)
         print("Error occured:",e)
