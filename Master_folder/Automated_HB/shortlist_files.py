@@ -1,6 +1,15 @@
 import os
 import shutil
 
+def find_id(srch, ls):
+    #print(srch,ls)
+    for i in ls.split("_"):
+        #print("\t",srch,i)
+        if(len(i)==len(srch) and srch==i):
+            print("Found")
+            return True
+    return False
+
 def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_path,n):
     print("\n Getting short listed files - using File name...\n")
 
@@ -19,18 +28,20 @@ def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_p
             print("\t- Fetching short listed files...!")
 
             for i in data:
+                file_id = i
+                """
                 try:
                     if("\n" != i):
                         file_id = i.split("_")[1] if "uff" != i.split("_")[1] else i.split("_")[0] # Molecule ID Extraction
                 except IndexError:
                     if("\n" !=i):
                         file_id = i.strip()
-
+                """
                 not_found = True
                 ending = ''
                 for ligand in files_in_ligands_folder:
-                    if( n == 1 and ([file_id] in [ligand] or file_id[:-1] in [ligand])):
-                        move_file(ligand, i, parent_dir + folder_with_ligands, ligplot_processing_path)
+                    if( n == 1 and find_id(file_id,ligand)):
+                        shutil.move(parent_dir + folder_with_ligands + ligand, ligplot_processing_path + ligand)
                         files_in_ligands_folder.remove(ligand)
                         not_found = False
                         break
@@ -59,9 +70,4 @@ def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_p
         os.mkdir(ligplot_processing_path)
 
         for i in os.listdir(parent_dir + folder_with_ligands):
-            move_file(i, "", parent_dir + folder_with_ligands, ligplot_processing_path) # Moves all the files that are to be processed to "working_files" Folder
-
-def move_file(filename, shortlisted_id, source_path, destination_path):
-    if "\n" in shortlisted_id:
-        shortlisted_id = shortlisted_id[:-1]
-    shutil.move(source_path + filename, destination_path + filename)
+            shutil.move(parent_dir + folder_with_ligands + i, ligplot_processing_path + i) # Moves all the files that are to be processed to "working_files" Folder
