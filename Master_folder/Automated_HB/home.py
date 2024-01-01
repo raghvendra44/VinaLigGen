@@ -71,7 +71,10 @@ def home(parent_dir,ligplot_processing_path):
         st.success("Successfully uploaded")
         st.balloons()
         print("Uploaded!!")
-        print(" Zip files : ",parent_dir+upload_ligands.name,"\n PDB File : ",parent_dir+ref_file_for_splitting,"\n Text File : ",parent_dir+reference_file)
+        if(reference_file==None):
+            print(" Zip files : ",parent_dir+upload_ligands.name,"\n PDB File : ",parent_dir+ref_file_for_splitting,"\n Text File : ",reference_file)
+        else:
+            print(" Zip files : ",parent_dir+upload_ligands.name,"\n PDB File : ",parent_dir+ref_file_for_splitting,"\n Text File : ",parent_dir+reference_file)
 
     if(run == True):
         start_time = time.time()
