@@ -67,7 +67,8 @@ def get_files(parent_dir,reference_file,folder_with_ligands,ligplot_processing_p
 
     else:
         print("\t- Created a Folder for adding all the short listed files!")
-        os.mkdir(ligplot_processing_path)
+        if(os.path.exists(ligplot_processing_path) != True):
+            os.mkdir(ligplot_processing_path)
 
         for i in os.listdir(parent_dir + folder_with_ligands):
             shutil.move(parent_dir + folder_with_ligands + i, ligplot_processing_path + i) # Moves all the files that are to be processed to "working_files" Folder
