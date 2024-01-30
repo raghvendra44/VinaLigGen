@@ -32,7 +32,7 @@ The main purpose to download this is to convert your .ps ligplot file into an .p
 ## Run your files
 - Refer the **docs** section after the test run of the code, it will guide you through how to format your files such that it is compatible with the code.
 
-## If you have used this code in your work, please cite it:
+## If you have used this code in your work, please cite these articles:
 - Laskowski, Roman A., and Mark B. Swindells. "LigPlot+: multiple ligand–protein interaction diagrams for drug discovery." (2011): 2778-2786.
 - Agrawal, Raghvendra, et al. "VinaLigGen: a method to generate LigPlots and retrieval of hydrogen and hydrophobic interactions from protein-ligand complexes." Journal of Biomolecular Structure and Dynamics (2023): 1-4.
 
