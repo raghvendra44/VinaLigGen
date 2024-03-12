@@ -29,7 +29,7 @@ def main():
 
     if choice == "Docs":
         st.title("Documentation")
-        documentation(parent_dir)
+        documentation()
 
     if choice == "About Us":
         st.subheader("About Us")
