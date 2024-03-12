@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-path = Path(__file__).parent
+path = str(Path(__file__).parent)
 sys.path.append(path)
 
 import os
