@@ -1,7 +1,7 @@
 # VinaLigGen
 Generate Bulk Ligplots by using docked complexes from Autodock vina
 
-## Steps to satisfy all dependencies
+## Steps to satisfy all dependencies ([video](https://www.youtube.com/watch?v=TOcCuLhVOq8))
 
 ### Step 0 : Pre-requisites
 - Python version below 3.11 and above 3.8. Optimum python version would be [3:10:7](https://www.python.org/downloads/release/python-3107/)
@@ -33,6 +33,6 @@ The main purpose to download this is to convert your .ps ligplot file into an .p
 - Refer the **docs** section after the test run of the code, it will guide you through how to format your files such that it is compatible with the code.
 
 ## If you have used this code in your work, please cite these articles:
-- Laskowski, Roman A., and Mark B. Swindells. "LigPlot+: multiple ligand–protein interaction diagrams for drug discovery." (2011): 2778-2786.
-- Agrawal, Raghvendra, et al. "VinaLigGen: a method to generate LigPlots and retrieval of hydrogen and hydrophobic interactions from protein-ligand complexes." Journal of Biomolecular Structure and Dynamics (2023): 1-4.
-
+- Agrawal, Raghvendra, H. B. Punarva, Gagan O. Heda, Y. M. Vishesh, and Prashantha Karunakar. "VinaLigGen: a method to generate LigPlots and retrieval of hydrogen and hydrophobic interactions from protein-ligand complexes." Journal of Biomolecular Structure and Dynamics (2023): 1-4.
+- Wallace, Andrew C., Roman A. Laskowski, and Janet M. Thornton. "LIGPLOT: a program to generate schematic diagrams of protein-ligand interactions." Protein engineering, design and selection 8, no. 2 (1995): 127-134.
+- Dallakyan, Sargis, and Arthur J. Olson. "Small-molecule library screening by docking with PyRx." Chemical biology: methods and protocols (2015): 243-250.
