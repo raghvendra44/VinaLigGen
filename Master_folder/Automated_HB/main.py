@@ -36,7 +36,8 @@ def main():
         st.text("""This Server is made by Students of PES UNIVERSITY under
 Guidance of Dr. Prashantha Karunakar.
 
-If you find any bug or any issue, kindly mail to raghvendra@pesu.pes.edu""")
+If you find any bug or any issue, kindly mail to prashantha281984@gmail.com""")
 
 if __name__ == '__main__':
     main()
+
